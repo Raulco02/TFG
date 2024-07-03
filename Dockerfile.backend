@@ -1,0 +1,24 @@
+# Dockerfile.backend
+
+# Utiliza una imagen base de Ubuntu
+FROM ubuntu:20.04
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Actualiza los repositorios e instala Python y otras dependencias
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia los archivos necesarios
+COPY Backend/ /app/
+# ¿Por qué la copia?
+
+# Instala las dependencias de Python
+RUN pip3 install -r requirements.txt
+
+# Comando para iniciar el servidor Flask y el cliente MQTT
+CMD ["sh", "-c", "python3 app.py & python3 mqtt_client.py & wait"] 
+#¿Por qué el wait?

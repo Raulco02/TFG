@@ -1,0 +1,1 @@
+Estoy ejecutando scripts sacados del xml, podría insertarse un script malicioso, ¿cómo lo evito?

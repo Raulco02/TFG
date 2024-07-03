@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/app
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    volumes:
+      - ./Backend:/app
+    depends_on:
+      - mysql
+      - mongo
+      - mosquitto
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DB=mydatabase
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - MQTT_BROKER=tcp://mosquitto:1883
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init_mysql.sql:/docker-entrypoint-initdb.d/init_mysql.sql
+    ports:
+      - "3306:3306"
+
+  mongo:
+    image: mongo
+    command: mongod --replSet rs0 --bind_ip_all
+    volumes:
+      - mongo_data:/data/db
+      - ./db/init_mongo.js:/docker-entrypoint-initdb.d/init_mongo.js
+    ports:
+      - "27017:27017"
+    entrypoint: [
+      "bash", "-c", 
+      "mongod --replSet rs0 --bind_ip_all --port 27017 --fork --logpath /var/log/mongodb.log && mongo --eval 'rs.initiate()' && tail -f /var/log/mongodb.log"
+    ]
+
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+
+  chirpstack:
+    image: chirpstack/chirpstack:latest
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
+  mongo_data:
+  mosquitto_data:
+  mosquitto_log:
