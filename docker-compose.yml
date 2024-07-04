@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     ports:
-      - "3000:3000"
+      - "5137:5137"
     volumes:
       - ./Frontend:/app
 
@@ -27,6 +27,8 @@ services:
       - MYSQL_DB=mydatabase
       - MONGO_URI=mongodb://mongo:27017/mydatabase
       - MQTT_BROKER=tcp://mosquitto:1883
+    ports:
+      - "5000:5000"
 
   mysql:
     image: mysql:8
