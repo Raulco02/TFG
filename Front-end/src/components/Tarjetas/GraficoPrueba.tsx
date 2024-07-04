@@ -1,18 +1,18 @@
-// src/components/SensorChart.tsx
+// src/components/dispositivoChart.tsx
 
 import React, { useEffect } from 'react';
 import { ResponsiveContainer, LineChart, BarChart, PieChart, Pie, Cell, Bar, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 import dayjs from 'dayjs';
 import { TipoGrafico, TiempoGrafico } from '../../resources/enums/enums';
 
-interface SensorData {
+interface dispositivoData {
   timestamp: string;
   value: number;
-  sensor: string;
+  dispositivo: string;
 }
 
-interface SensorChartProps {
-  data: SensorData[];
+interface dispositivoChartProps {
+  data: dispositivoData[];
   tipo: TipoGrafico;
   tiempoGrafico: TiempoGrafico;
   unidad?: string;
@@ -24,7 +24,7 @@ const colors = [
   "#d0ed57", "#a4de6c", "#d0ed57", "#ffc0cb", "#b0e0e6"
 ];
 
-const SensorChart: React.FC<SensorChartProps> = ({ data, tipo, tiempoGrafico, unidad='' }) => {
+const dispositivoChart: React.FC<dispositivoChartProps> = ({ data, tipo, tiempoGrafico, unidad='' }) => {
   useEffect(() => {
     console.log("Data: ", data);
     console.log("Tipo: ", tipo);
@@ -65,34 +65,34 @@ const SensorChart: React.FC<SensorChartProps> = ({ data, tipo, tiempoGrafico, un
 
   const dates = Array.from({ length }, (_, i) => endDate.subtract(i, unit).format(format)).reverse();
 
-  const sensors = Array.from(new Set(data.map(d => d.sensor)));
+  const dispositivos = Array.from(new Set(data.map(d => d.dispositivo)));
 
-  const sensorMap: { [key: string]: { [key: string]: number[] } } = {};
+  const dispositivoMap: { [key: string]: { [key: string]: number[] } } = {};
   dates.forEach(date => {
-    sensorMap[date] = {};
-    sensors.forEach(sensor => {
-      sensorMap[date][sensor] = [];
+    dispositivoMap[date] = {};
+    dispositivos.forEach(dispositivo => {
+      dispositivoMap[date][dispositivo] = [];
     });
   });
 
-  data.forEach(({ timestamp, value, sensor }) => {
+  data.forEach(({ timestamp, value, dispositivo }) => {
     const date = dayjs(timestamp).format(format);
-    if (sensorMap[date]) {
-      sensorMap[date][sensor].push(value);
+    if (dispositivoMap[date]) {
+      dispositivoMap[date][dispositivo].push(value);
     }
   });
 
   const chartData = dates.map(date => {
     const entry: { date: string; [key: string]: number | null } = { date };
-    sensors.forEach(sensor => {
-      const values = sensorMap[date][sensor];
-      entry[sensor] = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
+    dispositivos.forEach(dispositivo => {
+      const values = dispositivoMap[date][dispositivo];
+      entry[dispositivo] = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
     });
     return entry;
   });
 
-  const sensorColors = sensors.reduce<{ [key: string]: string }>((acc, sensor, index) => {
-    acc[sensor] = colors[index % colors.length];
+  const dispositivoColors = dispositivos.reduce<{ [key: string]: string }>((acc, dispositivo, index) => {
+    acc[dispositivo] = colors[index % colors.length];
     return acc;
   }, {});
 
@@ -107,12 +107,12 @@ const SensorChart: React.FC<SensorChartProps> = ({ data, tipo, tiempoGrafico, un
       <YAxis label={{ value: unidad, angle: -90, position: 'insideLeft' }}/>
       <Tooltip formatter={tooltipFormatter}/>
       <Legend />
-      {sensors.map(sensor => (
+      {dispositivos.map(dispositivo => (
         <Line
-          key={sensor}
+          key={dispositivo}
           type="monotone"
-          dataKey={sensor}
-          stroke={sensorColors[sensor]}
+          dataKey={dispositivo}
+          stroke={dispositivoColors[dispositivo]}
           activeDot={{ r: 8 }}
           connectNulls={true}
         />
@@ -130,17 +130,17 @@ const SensorChart: React.FC<SensorChartProps> = ({ data, tipo, tiempoGrafico, un
       <YAxis label={{ value: unidad, angle: -90, position: 'insideLeft' }}/>
       <Tooltip formatter={tooltipFormatter}/>
       <Legend />
-      {sensors.map(sensor => (
-        <Bar key={sensor} dataKey={sensor} fill={sensorColors[sensor]} />
+      {dispositivos.map(dispositivo => (
+        <Bar key={dispositivo} dataKey={dispositivo} fill={dispositivoColors[dispositivo]} />
       ))}
     </BarChart>
     </ResponsiveContainer>
   );
 
   const renderPieChart = () => {
-    const pieData = sensors.map(sensor => {
-      const total = chartData.reduce((sum, entry) => sum + (entry[sensor] || 0), 0);
-      return { name: sensor, value: total };
+    const pieData = dispositivos.map(dispositivo => {
+      const total = chartData.reduce((sum, entry) => sum + (entry[dispositivo] || 0), 0);
+      return { name: dispositivo, value: total };
     });
 
     return (
@@ -174,4 +174,4 @@ const SensorChart: React.FC<SensorChartProps> = ({ data, tipo, tiempoGrafico, un
   );
 };
 
-export default SensorChart;
+export default dispositivoChart;

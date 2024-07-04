@@ -90,7 +90,7 @@ const Termostato = ({ valorInicial, nombreAtributo, nombreDispositivo, idDisposi
                 variant="contained"
                 color="primary"
                 onClick={setTemperatura}
-                style={{ height: '100%', textTransform: 'capitalize' }}
+                style={{ height: '100%', textTransform: 'capitalize', backgroundColor: theme.palette.primary.cardButton, color: theme.palette.primary.contrastText}}
               >
                 Establecer
               </Button>

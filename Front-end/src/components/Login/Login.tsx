@@ -121,7 +121,7 @@ const Login: React.FC<{ onLogin: (id: string) => void }> = ({ onLogin }) => {
         </form>
         <div className="form-links">
           <a href="/registrar">¿No tienes cuenta? Regístrate</a>
-          <a href="#">He olvidado mi contraseña</a>
+          <a href="#">Descarga los datos de los sensores</a>
         </div>
       </div>
     </div>

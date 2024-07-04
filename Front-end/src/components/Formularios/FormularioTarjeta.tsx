@@ -120,9 +120,10 @@ const FormularioTarjeta = ({ onClose, submit, editingItem }) => {
   }, [dispositivos]);
 
   useEffect(() => {
-    if (tipo === Tarjetas.Estado && typeof editingItem === "object") {
+    if (tipo === Tarjetas.Estado && editando && typeof editingItem === "object" && editingItem && !(editingItem.nativeEvent instanceof Event)) {
       console.log("Atributos:", atributosObj);
       console.log("Dispositivos:", dispositivosObj);
+      console.log("Editing item:", editingItem);
       for (let i = 0; i < numAtributos; i++) {
         setValue(`id_atributo${i}`, editingItem["id-atributo"][i]);
         setValue(`atributo_${i}`, editingItem["nombre-atributo"][i]);
@@ -140,24 +141,26 @@ const FormularioTarjeta = ({ onClose, submit, editingItem }) => {
   useEffect(() => {}, [tipo]);
 
   useEffect(() => {
-    const newDispositivosObj = { ...dispositivosObj };
-    const newAtributosObj = { ...atributosObj };
-    if (numAtributos > prevNumAtributos) {
-      for (let i = prevNumAtributos; i < numAtributos; i++) {
-        newDispositivosObj[`dispositivo_${i}`] = "";
-        newAtributosObj[`atributo_${i}`] = "";
+    if(editando){
+      const newDispositivosObj = { ...dispositivosObj };
+      const newAtributosObj = { ...atributosObj };
+      if (numAtributos > prevNumAtributos) {
+        for (let i = prevNumAtributos; i < numAtributos; i++) {
+          newDispositivosObj[`dispositivo_${i}`] = "";
+          newAtributosObj[`atributo_${i}`] = "";
+        }
+      } else if (numAtributos < prevNumAtributos) {
+        for (let i = 0; i < numAtributos; i++) {
+          if (newDispositivosObj[`dispositivo_${i}`] !== undefined)
+            delete newDispositivosObj[`dispositivo_${i}`];
+          if (newAtributosObj[`atributo_${i}`] !== undefined)
+            delete newAtributosObj[`atributo_${i}`];
+        }
       }
-    } else if (numAtributos < prevNumAtributos) {
-      for (let i = 0; i < numAtributos; i++) {
-        if (newDispositivosObj[`dispositivo_${i}`] !== undefined)
-          delete newDispositivosObj[`dispositivo_${i}`];
-        if (newAtributosObj[`atributo_${i}`] !== undefined)
-          delete newAtributosObj[`atributo_${i}`];
-      }
-    }
 
-    setDispositivosObj(newDispositivosObj);
-    setAtributosObj(newAtributosObj);
+      setDispositivosObj(newDispositivosObj);
+      setAtributosObj(newAtributosObj);
+    }
   }, [numAtributos]);
 
   useEffect(() => {

@@ -146,6 +146,7 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
         contrastText: '#fff',  // Color del texto en elementos con el color principal
         secondaryText: '#1976d2',
         text: '#000',  // Color del texto en elementos con el color principal
+        cardButton: '#1976d2'
       },
       opposite: {
         main: '#f5f5f5',  // Color opuesto
@@ -169,7 +170,8 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
         contrastText: '#fff',  // Color del texto en elementos con el color principal
         secondaryText: '#fff',
         text: '#fff',
-        button: '#dc004e'
+        button: '#dc004e',
+        cardButton: '#1976d2'
       },
       secondary: {
         main: '#dc004e',  // Color secundario
@@ -306,7 +308,7 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
               right: 16,
               width: '50px',
               height: '50px',
-              backgroundColor: temaActual.palette.primary.main,
+              backgroundColor: temaActual.palette.primary.cardButton,
               color: temaActual.palette.primary.contrastText,
               '&:hover': { backgroundColor: '#3B92E9' },
             }}

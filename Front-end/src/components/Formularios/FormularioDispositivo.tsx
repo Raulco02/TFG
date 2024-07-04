@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { Button, MenuItem, TextField, Box, Grid } from "@mui/material";
+import { Button, MenuItem, TextField, Box, Grid, Typography } from "@mui/material";
 import { ArrowForward, Close } from "@mui/icons-material";
 import integracionService from "../../services/integracionService";
 import dispositivoService from "../../services/dispositivoService";
@@ -153,6 +153,11 @@ const FormularioDispositivo = ({ dispositivo=null, onClose, theme }) => {
     <Box className="formulario" sx={{ padding: 2, backgroundColor: theme.palette.background.paper, color: theme.palette.primary.text }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+                Dispositivos
+            </Typography>
+          </Grid>
           <Grid item xs={6}>
             <Controller
               name="id"

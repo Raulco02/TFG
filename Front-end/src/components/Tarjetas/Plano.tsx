@@ -716,6 +716,7 @@ const PlanosComponent = ({ isSmall, theme }) => {
               color="primary"
               style={{
                 textTransform: "none",
+                backgroundColor: theme.palette.primary.cardButton,
               }}
             >
               Ver plano

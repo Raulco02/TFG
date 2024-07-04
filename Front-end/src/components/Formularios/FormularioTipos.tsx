@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button, MenuItem, TextField, Popover, Box, Grid, IconButton } from '@mui/material';
+import { Button, MenuItem, TextField, Popover, Box, Grid, IconButton, Typography } from '@mui/material';
 import { ArrowForward, Close, Add, Remove } from '@mui/icons-material';
 import grupoService from '../../services/grupoService';
 import dispositivoService from '../../services/dispositivoService';
@@ -19,6 +19,11 @@ const FormularioTipos = ({ tipo = null, onClose, popover = false, theme }) => {
     <Box className={!popover ? 'formulario' : ''} sx={{ padding: 2, backgroundColor: theme.palette.background.paper, color: theme.palette.primary.text }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom>
+              Tipo de atributos
+          </Typography>
+        </Grid>
           <Grid item xs={12}>
             <Controller
               name="nombre"

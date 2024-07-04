@@ -21,7 +21,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({ info, anchorEl, onClose }) => {
             return null; // o un mensaje de error adecuado
           }
         return (
-            <Box ml={level * 2}>
+            <Box ml={level * 2} sx={{backgroundColor: 'white'}}>
                 {Object.entries(info).map(([key, value]) => (
                     <Box key={key} my={1}>
                         <Typography variant="body1" component="span" fontWeight="bold">
@@ -57,7 +57,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({ info, anchorEl, onClose }) => {
                 horizontal: 'right',
             }}
         >
-            <Box p={2} maxWidth={300}>
+            <Box p={2} maxWidth={300} sx={{backgroundColor: 'white'}}>
                 {renderInfo(info)}
             </Box>
         </Popover>

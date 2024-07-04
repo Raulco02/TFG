@@ -94,13 +94,13 @@ const Grafico = ({ item }) => {
     const formatSensorData = (data, nAtributo) => {
         const formattedData = [];
         data.forEach(entry => {
-            const { timestamp, attributes, sensor } = entry;
+            const { timestamp, attributes, dispositivo } = entry;
             console.log(nAtributo)
             if (attributes && attributes[nAtributo] !== undefined) {
                 console.log(nAtributo, attributes[nAtributo]);
                 formattedData.push({
                     timestamp: dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ss[Z]'),
-                    sensor: sensor,
+                    dispositivo: dispositivo,
                     value: attributes[nAtributo]
                 });
             } else {

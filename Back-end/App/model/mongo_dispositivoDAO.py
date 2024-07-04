@@ -34,7 +34,7 @@ class mongo_dispositivoDAO:
 
     def almacenarMedicion(self, atributos, sensor):
         payload = {
-            "sensor": sensor,
+            "sensor": sensor,#Cuidado
             "timestamp": datetime.utcnow(),
             "attributes": atributos
         }
