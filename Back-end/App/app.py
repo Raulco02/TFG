@@ -94,8 +94,8 @@ if __name__ == '__main__':
         # atexit.register(stop_motor_reglas, motor_reglas_instance)
 
 
-        # motorReglas = MotorReglas()
-        # motorReglas.start()
+        motorReglas = MotorReglas()
+        motorReglas.start()
 
         # Ejecutar la aplicación Flask en el hilo principal
         app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
@@ -105,6 +105,6 @@ if __name__ == '__main__':
         # stop_motor_reglas(motor_reglas_instance)
 
 
-        # if motorReglas:
-        #     motorReglas.stop()
+        if motorReglas:
+            motorReglas.stop()
         sys.exit(0)

@@ -1,3 +1,6 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con los dispositivos en la base de datos mongodb. 
+# Proporciona rutas para obtener información de los dispositivos.
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from App.model.mongo_dispositivoDAO import mongo_dispositivoDAO
@@ -7,6 +10,17 @@ historico_blueprint = Blueprint('historico', __name__)
 
 @historico_blueprint.route('/<string:id_dispositivo>', methods=['GET'])
 def get_sensor(id_dispositivo):
+    # Descripción:
+    # Obtiene los datos del sensor basado en el ID del dispositivo proporcionado.
+
+    # Parámetros:
+    # id_dispositivo (string): ID del dispositivo.
+
+    # Retorna:
+    # Response: Respuesta HTTP con los datos del sensor en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: Dispositivo no encontrado.
     filtro = {"dispositivo": id_dispositivo}
     sensor_dao = mongo_dispositivoDAO()
     sensor_data = sensor_dao.get_sensor_data(filtro)
@@ -17,6 +31,17 @@ def get_sensor(id_dispositivo):
 
 @historico_blueprint.route('/last/<string:id_dispositivo>', methods=['GET'])
 def get_sensor_last_value(id_dispositivo):
+    # Descripción:
+    # Obtiene el último valor del sensor basado en el ID del dispositivo proporcionado.
+
+    # Parámetros:
+    # id_dispositivo (string): ID del dispositivo.
+
+    # Retorna:
+    # Response: Respuesta HTTP con el último valor del sensor en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: Dispositivo no encontrado.
     filtro = {"dispositivo": id_dispositivo}
     sensor_dao = mongo_dispositivoDAO()
     sensor_data = sensor_dao.get_sensor_last_value(filtro)
@@ -27,6 +52,18 @@ def get_sensor_last_value(id_dispositivo):
     
 @historico_blueprint.route('/lista', methods=['GET'])
 def get_sensores():
+    # Descripción:
+    # Obtiene los datos de los sensores basados en los IDs de los dispositivos proporcionados y los filtros opcionales de fecha.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los datos de los sensores en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.BAD_REQUEST: No se proporcionaron IDs de sensores.
+    # HTTPStatus.NOT_FOUND: Dispositivos no encontrados.
     id_dispositivos = request.args.getlist('id')  # Obtener lista de valores para 'id_dispositivo' de los parámetros de consulta
     atributos = request.args.getlist('atributo')
     fecha_inicio = request.args.get('fecha_inicio')

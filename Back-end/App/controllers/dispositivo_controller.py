@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con los dispositivos en la aplicación. 
+# Proporciona rutas para obtener, crear, editar y eliminar dispositivos.
+
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
 from App.services.mysql_dispositivo_service import mysql_dispositivoService 
@@ -7,6 +11,18 @@ dispositivo_blueprint = Blueprint('dispositivo', __name__)
 
 @dispositivo_blueprint.route('/getAll', methods=['GET'])
 def get_dispositivos():
+    # Descripción:
+    # Obtiene todos los dispositivos.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los dispositivos en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: No se encontraron dispositivos.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener los dispositivos debido a una excepción.
     try:
         data = mysql_dispositivoService().obtener_dispositivos()
         if data:
@@ -19,6 +35,18 @@ def get_dispositivos():
     
 @dispositivo_blueprint.route('/getAllTermostato', methods=['GET'])
 def get_dispositivos_temperatura():
+    # Descripción:
+    # Obtiene todos los dispositivos de tipo termostato.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los dispositivos de temperatura en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: No se encontraron dispositivos de temperatura.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener los dispositivos debido a una excepción.
     try:
         data = mysql_dispositivoService().obtener_dispositivos_temperatura()
         if data:
@@ -31,6 +59,19 @@ def get_dispositivos_temperatura():
     
 @dispositivo_blueprint.route('/getAll/<string:id>', methods=['GET'])
 def get_dispositivos_por_atributo(id):
+    # Descripción:
+    # Obtiene todos los dispositivos por atributo específico.
+
+    # Parámetros:
+    # id (string): ID del atributo.
+
+    # Retorna:
+    # Response: Respuesta HTTP con los dispositivos en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.BAD_REQUEST: No se especificó un id de atributo.
+    # HTTPStatus.NOT_FOUND: No se encontraron dispositivos.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener los dispositivos debido a una excepción.
     try:
         if not id or id == '':
             return jsonify({'error': 'No se especificó un id de atributo'}), HTTPStatus.BAD_REQUEST
@@ -45,6 +86,18 @@ def get_dispositivos_por_atributo(id):
     
 @dispositivo_blueprint.route('/get/<string:id>', methods=['GET']) ##Tengo que validar el valor del id
 def get_dispositivo(id):
+    # Descripción:
+    # Obtiene un dispositivo específico basado en el ID proporcionado.
+
+    # Parámetros:
+    # id (string): ID del dispositivo.
+
+    # Retorna:
+    # Response: Respuesta HTTP con el dispositivo en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: No se encontró el dispositivo.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener el dispositivo debido a una excepción.
     try:
         data = mysql_dispositivoService().obtener_dispositivo_por_id(id)
         if data:
@@ -57,6 +110,22 @@ def get_dispositivo(id):
     
 @dispositivo_blueprint.route('/create', methods=['POST'])
 def create_dispositivo():
+    # Descripción:
+    # Crea un nuevo dispositivo.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los datos del dispositivo creado en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene permisos para crear dispositivos.
+    # HTTPStatus.BAD_REQUEST: Se deben especificar id, nombre, topic y nombre de integración correctamente para crear un dispositivo.
+    # HTTPStatus.BAD_REQUEST: Dispositivo duplicado.
+    # HTTPStatus.BAD_REQUEST: Error de valor.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al crear el dispositivo debido a una excepción.
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -91,6 +160,22 @@ def create_dispositivo():
     
 @dispositivo_blueprint.route('/edit', methods=['PUT'])
 def edit_dispositivo():
+    # Descripción:
+    # Edita un dispositivo existente.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los datos del dispositivo editado en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene permisos para editar dispositivos.
+    # HTTPStatus.BAD_REQUEST: Se deben especificar prev_id, id, nombre, topic y nombre de integración correctamente para editar un dispositivo.
+    # HTTPStatus.BAD_REQUEST: Dispositivo duplicado.
+    # HTTPStatus.BAD_REQUEST: Error de valor.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al editar el dispositivo debido a una excepción.
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -126,6 +211,21 @@ def edit_dispositivo():
     
 @dispositivo_blueprint.route('/delete/<string:id>', methods=['DELETE'])
 def delete_dispositivo(id):
+    # Descripción:
+    # Elimina un dispositivo específico basado en el ID proporcionado.
+
+    # Parámetros:
+    # id (string): ID del dispositivo a eliminar.
+
+    # Retorna:
+    # Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene permisos para eliminar dispositivos.
+    # HTTPStatus.BAD_REQUEST: No se especificó un id de dispositivo.
+    # HTTPStatus.NOT_FOUND: No se encontró el dispositivo.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al eliminar el dispositivo debido a una excepción.
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -149,6 +249,17 @@ def delete_dispositivo(id):
 
 @dispositivo_blueprint.route('/getAllAtributos', methods=['GET'])  
 def get_all_atributos():
+    # Descripción:
+    # Obtiene todos los atributos.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con los atributos en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.NOT_FOUND: No se encontraron atributos.
     data = mysql_dispositivoService().obtener_atributos()
     if data:
         return jsonify(data), HTTPStatus.OK

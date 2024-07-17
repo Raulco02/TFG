@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con las integraciones. 
+# Proporciona rutas para obtener, crear, editar y eliminar integraciones.
+
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
 from App.exceptions.duplicate import duplicateIntegracionException, duplicateAtributoException
@@ -7,6 +11,16 @@ from App.services.integracion_service import integracionService
 integracion_blueprint = Blueprint('integracion', __name__)
 ############VIGILAR QUE ESTE FUNCIONANDO EL ACTUALIZAR SCRIPTS
 def validar_atributos(atributos):
+    """
+    Descripción:
+    Valida que los atributos proporcionados sean correctos.
+
+    Parámetros:
+    atributos (list): Lista de diccionarios con los atributos a validar.
+
+    Retorna:
+    bool: True si los atributos son válidos, False en caso contrario.
+    """
     if not isinstance(atributos, list):
         print("Error al validar que atributos sea una lista")
         return False
@@ -47,6 +61,21 @@ def validar_atributos(atributos):
 
 @integracion_blueprint.route('/', methods=['GET'])
 def get_integraciones():
+    """
+    Descripción:
+    Obtiene todas las integraciones registradas.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con la lista de integraciones en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron integraciones.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener las integraciones debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -66,6 +95,21 @@ def get_integraciones():
     
 @integracion_blueprint.route('/tipos', methods=['GET'])
 def get_tipos():
+    """
+    Descripción:
+    Obtiene todos los tipos de integraciones disponibles.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con los tipos de integraciones en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron tipos de integraciones.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener los tipos de integraciones debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -85,6 +129,21 @@ def get_tipos():
     
 @integracion_blueprint.route('/add', methods=['POST'])
 def add_integracion():
+    """
+    Descripción:
+    Crea una nueva integración con los datos proporcionados.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito y el ID de la integración creada en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al crear la integración debido a datos incorrectos o faltantes.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar crear la integración debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -124,6 +183,22 @@ def add_integracion():
     
 @integracion_blueprint.route('/edit', methods=['PUT'])
 def edit_integracion():
+    """
+    Descripción:
+    Edita una integración existente con los datos proporcionados.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al editar la integración debido a datos incorrectos o faltantes.
+    HTTPStatus.NOT_FOUND: No se encontró la integración a editar.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar editar la integración debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -167,6 +242,22 @@ def edit_integracion():
     
 @integracion_blueprint.route('/delete', methods=['DELETE'])
 def delete_integracion():
+    """
+    Descripción:
+    Elimina una integración existente según el ID proporcionado.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al eliminar la integración debido a datos incorrectos o faltantes.
+    HTTPStatus.NOT_FOUND: No se encontró la integración a eliminar.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar eliminar la integración debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)

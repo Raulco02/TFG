@@ -5,16 +5,47 @@ import mysql.connector
 import os
 
 class IntegracionDAO:
+    """
+    Descripción:
+    Clase para gestionar operaciones CRUD relacionadas con integraciones y atributos en la base de datos.
+    """
     def __init__(self):
+        """
+        Descripción:
+        Inicializa un objeto `agente_mysql` para interactuar con la base de datos MySQL.
+
+        Return:
+        None
+        """
         self.agent = agente_mysql()
 
     def conectar(self):
+        """
+        Descripción:
+        Establece una conexión activa con la base de datos MySQL utilizando el método `connect()` del agente MySQL.
+
+        Retorna:
+        None
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar conectar con la base de datos.
+        """
         try:
             self.agent.connect()
         except Exception as ex:
             print(f"Error al conectar con la base de datos: {ex}")
 
     def desconectar(self):
+        """
+        Descripción:
+        Cierra la conexión activa con la base de datos MySQL utilizando el método `disconnect()` del agente MySQL.
+
+        Retorna:
+        None
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar desconectar de la base de datos.
+        """
         try:
             print('Desconectando', self.agent.connection.is_connected())
             self.agent.disconnect()
@@ -23,6 +54,19 @@ class IntegracionDAO:
             print(f"Error al desconectar de la base de datos: {ex}")
 
     def obtener_integraciones(self): #Me lo ha arreglao chatgpt, comprobar
+        """
+        Descripción:
+        Obtiene todas las integraciones almacenadas en la base de datos MySQL junto con sus atributos y scripts asociados.
+
+        Retorna:
+        list or None
+            Lista de diccionarios donde cada diccionario contiene los detalles de una integración, incluyendo
+            sus atributos y script asociado. En caso de error, retorna None.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar obtener las integraciones desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             query = """
@@ -107,6 +151,23 @@ class IntegracionDAO:
 
     
     def obtener_integracion(self, nombre_integracion): #La consulta tiene ls repe y le falta icono
+        """
+        Descripción:
+        Obtiene los detalles de una integración específica por su nombre, incluyendo sus atributos y script asociado.
+
+        Parametros:
+        nombre_integracion : str
+            Nombre de la integración a buscar en la base de datos MySQL.
+
+        Retorna:
+        dict or None
+            Diccionario con los detalles de la integración encontrada. En caso de no encontrar la integración o
+            ocurrir un error, retorna None.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar obtener una integración desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             query = """
@@ -180,6 +241,19 @@ class IntegracionDAO:
             return None
         
     def obtener_tipos(self):
+        """
+        Descripción:
+        Obtiene todos los tipos de atributos disponibles en la base de datos MySQL.
+
+        Retorna:
+        list or None
+            Lista de diccionarios donde cada diccionario contiene los detalles de un tipo de atributo. En caso de error,
+            retorna None.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar obtener los tipos de atributos desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             query = """
@@ -203,6 +277,25 @@ class IntegracionDAO:
             return None
         
     def crear_integracion(self, integracion, atributos): ##Comprobar si las transacciones funcionan
+        """
+        Descripción:
+        Crea una nueva integración en la base de datos MySQL junto con los atributos asociados.
+
+        Parametros:
+        integracion : dict
+            Diccionario con los detalles de la integración a crear, incluyendo nombre y script.
+
+        atributos : list
+            Lista de diccionarios donde cada diccionario contiene los detalles de un atributo asociado a la integración.
+
+        Retorna:
+        bool
+            True si la integración y sus atributos fueron creados exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar crear la integración y sus atributos en la base de datos MySQL.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()
@@ -266,6 +359,28 @@ class IntegracionDAO:
                 raise
 
     def edit_integracion(self, prev_nombre, integracion, atributos): ##CREO que funciona, REVISAR
+        """
+        Descripción:
+        Edita una integración existente en la base de datos MySQL, actualizando sus detalles y atributos.
+
+        Parametros:
+        prev_nombre : str
+            Nombre actual de la integración que se desea editar.
+
+        integracion : dict
+            Diccionario con los detalles actualizados de la integración, incluyendo nombre y script.
+
+        atributos : list
+            Lista de diccionarios donde cada diccionario contiene los detalles actualizados de los atributos asociados a la integración.
+
+        Retorna:
+        bool
+            True si la integración y sus atributos fueron editados exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar editar la integración y sus atributos en la base de datos MySQL.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()
@@ -386,6 +501,19 @@ class IntegracionDAO:
                 raise
 
     def obtener_scripts(self):
+        """
+        Descripción:
+        Obtiene todos los scripts asociados a las integraciones almacenadas en la base de datos MySQL.
+
+        Retorna:
+        list or None
+            Lista de diccionarios donde cada diccionario contiene los detalles de un script asociado a una integración. 
+            En caso de error, retorna None.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar obtener los scripts desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             query = """
@@ -405,6 +533,23 @@ class IntegracionDAO:
             return None
         
     def obtener_script_integracion(self, nombre_integracion):
+        """
+        Descripción:
+        Obtiene el script asociado a una integración específica por su nombre.
+
+        Parametros:
+        nombre_integracion : str
+            Nombre de la integración cuyo script se desea obtener desde la base de datos MySQL.
+
+        Retorna:
+        str or None
+            Contenido del script asociado a la integración. En caso de no encontrar la integración o ocurrir un error,
+            retorna None.
+
+        Excepciones:
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar obtener el script de una integración desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             query = """
@@ -428,6 +573,24 @@ class IntegracionDAO:
         
 
     def eliminar_integracion(self, id):
+        """
+        Elimina una integración de la base de datos según su ID.
+
+        Parameters:
+        -----------
+        id : int
+            ID de la integración que se desea eliminar de la base de datos MySQL.
+
+        Returns:
+        --------
+        bool
+            True si la integración fue eliminada exitosamente, False en caso contrario.
+
+        Excepciones:
+        ------------
+        Exception:
+            Captura y maneja cualquier excepción que ocurra al intentar eliminar una integración desde la base de datos MySQL.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()

@@ -1,4 +1,8 @@
 class Tarjeta:
+    """
+    Descripción:
+    Clase que representa una sección en la aplicación.
+    """
     def __init__(self, tipo, posicion, id_seccion, contenido=None, imagen=None, tipo_grafico=None, tiempo_grafico=None, id_dispositivo=None, id_atributo=None, nombre_atributo=None, unidades=None, valor=None, nombre_dispositivo=None, icono=None, id_grupo=None, grupo=None, icono_grupo=None):
         self.tipo = tipo
         self.posicion = posicion

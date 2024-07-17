@@ -5,15 +5,51 @@ from App.exceptions.duplicate import duplicateDispositivoException
 ###NO HAY NADA DE UBICACION MAS ALLA DE GET, VER SI TENGO QUE MANEJAR ALGUN ERROR### ###VER ICONO DE ATRIBUTOS Y SI FALTA POR INCLUIR EN ALGUNO
 class mysql_dispositivoDAO:
     def __init__(self):
+        """
+        Descripción:
+        Inicializa una nueva instancia del objeto mysql_dispositivoDAO.
+
+        Parámetros:
+        Ninguno.
+        
+        Retorna:
+        Ninguno.
+        """
         self.agent = agente_mysql()
 
     def conectar(self):
+        """
+        Descripción:
+        Conecta con la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la conexión a la base de datos.
+        """
         try:
             self.agent.connect()
         except Exception as ex:
             print(f"Error al conectar con la base de datos: {ex}")
 
     def desconectar(self):
+        """
+        Descripción:
+        Desconecta de la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la desconexión de la base de datos.
+        """
         try:
             print('Desconectando', self.agent.connection.is_connected())
             self.agent.disconnect()
@@ -22,6 +58,19 @@ class mysql_dispositivoDAO:
             print(f"Error al desconectar de la base de datos: {ex}")
 
     def obtener_dispositivos(self):
+        """
+        Descripción:
+        Obtiene todos los dispositivos junto con sus atributos, valores actuales e integraciones desde la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        list: Lista de dispositivos con sus atributos, valores actuales e integraciones.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener los dispositivos.
+        """
         try:
             self.agent.connect()
             query = """
@@ -84,6 +133,19 @@ class mysql_dispositivoDAO:
             
 
     def obtener_dispositivos_temperatura(self):
+        """
+        Descripción:
+        Obtiene todos los dispositivos con atributos de tipo 'temperatura' desde la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        list: Lista de dispositivos con atributos de tipo 'temperatura'.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener los dispositivos de temperatura.
+        """
         try:
             self.agent.connect()
             query = """
@@ -141,6 +203,19 @@ class mysql_dispositivoDAO:
             raise
         
     def obtener_dispositivos_por_atributo(self, atributo):
+        """
+        Descripción:
+        Obtiene todos los dispositivos que tienen un atributo específico desde la base de datos MySQL.
+
+        Parámetros:
+        atributo (int): El ID del atributo que se desea buscar.
+
+        Retorna:
+        list: Lista de dispositivos que tienen el atributo especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener los dispositivos por atributo.
+        """
         try:
             self.agent.connect()
             query = """
@@ -185,6 +260,19 @@ class mysql_dispositivoDAO:
             raise
         
     def obtener_dispositivo_por_id(self, id):
+        """
+        Descripción:
+        Obtiene un dispositivo específico por su ID desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del dispositivo que se desea buscar.
+
+        Retorna:
+        dict: Diccionario que representa el dispositivo con el ID especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener el dispositivo por ID.
+        """
         try:
             print('ID;',id)
             self.agent.connect()
@@ -232,6 +320,20 @@ class mysql_dispositivoDAO:
             raise
     
     def crear_dispositivo(self, dispositivo):
+        """
+        Descripción:
+        Crea un nuevo dispositivo en la base de datos MySQL.
+
+        Parámetros:
+        dispositivo (dict): Diccionario que contiene la información del dispositivo a crear.
+
+        Retorna:
+        int: El ID del dispositivo recién creado.
+
+        Excepciones:
+        duplicateDispositivoException: Excepción específica para dispositivos duplicados.
+        Exception: Captura y maneja cualquier otra excepción que ocurra durante la creación del dispositivo.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()
@@ -474,6 +576,19 @@ class mysql_dispositivoDAO:
             return False
         
     def eliminar_dispositivo(self, id):
+        """
+        Descripción:
+        Elimina un dispositivo específico por su ID desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del dispositivo que se desea eliminar.
+
+        Retorna:
+        bool: True si el dispositivo fue eliminado exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar eliminar el dispositivo.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()

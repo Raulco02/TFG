@@ -4,6 +4,16 @@ from App.model.agente_mysql import agente_mysql
 
 class UsuariosDAO:
     def __init__(self):
+        """
+        Descripción:
+        Inicializa una nueva instancia del objeto UsuariosDAO.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+        """
         self.agent = agente_mysql()
         # self.config = configparser.ConfigParser()
         # # Configuración de MongoDB
@@ -28,6 +38,19 @@ class UsuariosDAO:
         #     self.mysql_database = None
 
     def conectar(self):
+        """
+        Descripción:
+        Conecta con la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la conexión a la base de datos.
+        """
         try:
             self.agent.connect()
         except Exception as ex:
@@ -35,6 +58,19 @@ class UsuariosDAO:
             raise
 
     def desconectar(self):
+        """
+        Descripción:
+        Desconecta de la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la desconexión de la base de datos.
+        """
         try:
             print('Desconectando', self.agent.connection.is_connected())
             self.agent.disconnect()
@@ -44,6 +80,19 @@ class UsuariosDAO:
             raise
 
     def crear_usuario(self, usuario):
+        """
+        Descripción:
+        Inserta un nuevo usuario en la base de datos MySQL.
+
+        Parámetros:
+        usuario (obj): Objeto con los datos del usuario que se desea crear.
+
+        Retorna:
+        bool: True si el usuario fue creado exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar crear el usuario.
+        """
         # Inserta un nuevo usuario en la base de datos
         try:
             self.conectar()
@@ -94,6 +143,20 @@ class UsuariosDAO:
 
 
     def actualizar_usuario(self, id, nuevo_usuario):
+        """
+        Descripción:
+        Actualiza un usuario existente en la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del usuario que se desea actualizar.
+        nuevo_usuario (obj): Objeto con los nuevos datos del usuario.
+
+        Retorna:
+        bool: True si el usuario fue actualizado exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar actualizar el usuario.
+        """
         # Actualiza un usuario existente en la base de datos
         try:
             self.conectar()
@@ -114,6 +177,20 @@ class UsuariosDAO:
             raise
 
     def obtener_usuario_por_id(self, id):
+        """
+        Descripción:
+        Obtiene un usuario por su ID desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del usuario que se desea obtener.
+
+        Retorna:
+        dict: Diccionario con los datos del usuario especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener el usuario.
+        """
+        
         # Obtiene un usuario por su nombre
         try:
             self.conectar()
@@ -129,6 +206,19 @@ class UsuariosDAO:
             raise
 
     def obtener_usuario_por_nombre(self, nombre):
+        """
+        Descripción:
+        Obtiene un usuario por su nombre desde la base de datos MySQL.
+
+        Parámetros:
+        nombre (str): El nombre del usuario que se desea obtener.
+
+        Retorna:
+        dict: Diccionario con los datos del usuario especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener el usuario.
+        """
         # Obtiene un usuario por su nombre
         try:
             self.conectar()
@@ -144,6 +234,19 @@ class UsuariosDAO:
             raise
 
     def obtener_usuario_por_correo(self, correo):
+        """
+        Descripción:
+        Obtiene un usuario por su correo desde la base de datos MySQL.
+
+        Parámetros:
+        correo (str): El correo del usuario que se desea obtener.
+
+        Retorna:
+        dict: Diccionario con los datos del usuario especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener el usuario.
+        """
         # Obtiene un usuario por su correo
         try:
             self.conectar()
@@ -161,6 +264,19 @@ class UsuariosDAO:
             raise
 
     def obtener_todos_los_usuarios(self):
+        """
+        Descripción:
+        Obtiene todos los usuarios desde la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        list: Lista de todos los usuarios.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener todos los usuarios.
+        """
         # Obtiene todos los usuarios
         try:
             self.conectar()
@@ -172,6 +288,19 @@ class UsuariosDAO:
             raise
 
     def eliminar_usuario(self, id):
+        """
+        Descripción:
+        Elimina un usuario por su ID desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del usuario que se desea eliminar.
+
+        Retorna:
+        bool: True si el usuario fue eliminado exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar eliminar el usuario.
+        """
         # Elimina un usuario por su id
         try:
             self.conectar()

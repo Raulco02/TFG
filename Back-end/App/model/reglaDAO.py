@@ -3,15 +3,51 @@ from App.model.agente_mysql import agente_mysql
 ### Para el tema de vigilar que se cumplan las reglas y ejecutar las acciones, revisar conversación Motor de reglas MySQL ChatGPT 29/05 ###
 class reglaDAO:
     def __init__(self):
+        """
+        Descripción:
+        Inicializa una nueva instancia del objeto reglaDAO.
+
+        Parámetros:
+        Ninguno.
+        
+        Retorna:
+        Ninguno.
+        """
         self.agent = agente_mysql()
 
     def conectar(self):
+        """
+        Descripción:
+        Conecta con la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la conexión a la base de datos.
+        """
         try:
             self.agent.connect()
         except Exception as ex:
             print(f"Error al conectar con la base de datos: {ex}")
 
     def desconectar(self):
+        """
+        Descripción:
+        Desconecta de la base de datos MySQL.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        Ninguno.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la desconexión de la base de datos.
+        """
         try:
             print('Desconectando', self.agent.connection.is_connected())
             self.agent.disconnect()
@@ -20,6 +56,20 @@ class reglaDAO:
             print(f"Error al desconectar de la base de datos: {ex}")
 
     def obtener_reglas_por_id_usuario(self, id, alerta=False):
+        """
+        Descripción:
+        Obtiene todas las reglas asociadas a un usuario específico desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID del usuario cuyas reglas se desean obtener.
+        alerta (bool): Indica si se deben filtrar las reglas de alerta.
+
+        Retorna:
+        list: Lista de reglas asociadas al usuario especificado.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener las reglas.
+        """
         try:
             self.conectar()
             condition = f"`usuario_id` = '{id}'"
@@ -76,6 +126,19 @@ class reglaDAO:
             raise
 
     def obtener_ids_dispositivos_por_regla(self, id_regla):
+        """
+        Descripción:
+        Obtiene los IDs de dispositivos asociados a una regla específica desde la base de datos MySQL.
+
+        Parámetros:
+        id_regla (int): El ID de la regla cuyas IDs de dispositivos se desean obtener.
+
+        Retorna:
+        list: Lista de IDs de dispositivos asociados a la regla especificada.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener los IDs de dispositivos.
+        """
         try:
             self.conectar()
             condition = f"`id-regla` = '{id_regla}'"
@@ -125,6 +188,19 @@ class reglaDAO:
     #         raise
 
     def obtener_reglas(self):
+        """
+        Descripción:
+        Obtiene todas las reglas desde la base de datos MySQL, junto con sus criterios y acciones asociadas.
+
+        Parámetros:
+        Ninguno.
+
+        Retorna:
+        list: Lista de reglas con sus criterios y acciones asociadas.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar obtener las reglas.
+        """
         try:
             self.conectar()
             
@@ -192,6 +268,21 @@ class reglaDAO:
             raise
         
     def crear_regla_por_usuario_id(self, regla, alerta): #Ver si puede haber 2 reglas con el mismo nombre
+        """
+        Descripción:
+        Crea una nueva regla asociada a un usuario específico en la base de datos MySQL.
+
+        Parámetros:
+        regla (dict): Diccionario que contiene la información de la regla a crear.
+        alerta (bool): Indica si la regla es una alerta.
+
+        Retorna:
+        bool: True si la regla fue creada exitosamente, False en caso contrario.
+
+        Excepciones:
+        ValueError: Excepción específica para dispositivos inexistentes.
+        Exception: Captura y maneja cualquier otra excepción que ocurra durante la creación de la regla.
+        """
         try:
             print('ID USUARIO en DAO:', regla['id_usuario'])
             self.conectar()
@@ -242,6 +333,20 @@ class reglaDAO:
             raise
 
     def eliminar_regla_por_id(self, id, usuario_id):
+        """
+        Descripción:
+        Elimina una regla específica por su ID y el ID del usuario desde la base de datos MySQL.
+
+        Parámetros:
+        id (int): El ID de la regla que se desea eliminar.
+        usuario_id (int): El ID del usuario al que pertenece la regla.
+
+        Retorna:
+        bool: True si la regla fue eliminada exitosamente, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar eliminar la regla.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()

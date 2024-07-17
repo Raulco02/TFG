@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con las reglas y las alertas. 
+# Proporciona rutas para obtener, crear, editar y eliminar reglas y alertas.
+
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
 from App.services.regla_service import reglaService
@@ -9,10 +13,17 @@ regla_blueprint = Blueprint('regla', __name__)
 
 def comprobar_criterios(criterios):
     """
+    Descripción:
     Comprueba la validez de una lista de criterios. Al menos uno de los criterios debe ser un disparador.
 
-    :param criterios: Lista de diccionarios que representan criterios.
-    :return: True si los criterios son válidos, False en caso contrario.
+    Parámetros:
+    - criterios: Lista de diccionarios que representan criterios.
+
+    Retorna:
+    Response: True si los criterios son válidos, False en caso contrario.
+
+    Excepciones:
+    HTTPStatus.BAD_REQUEST: Los criterios de la regla no son válidos.
     """
     if not isinstance(criterios, list):
         return False
@@ -38,11 +49,19 @@ def comprobar_criterios(criterios):
 
 def comprobar_acciones(acciones, isAdmin):
     """
+    Descripción:
     Comprueba la validez de una lista de acciones.
 
-    :param acciones: Lista de diccionarios que representan acciones.
-    :param isAdmin: True si el usuario es administrador, False en caso contrario.
-    :return: True si las acciones son válidas, False en caso contrario.
+    Parámetros:
+    - acciones: Lista de diccionarios que representan acciones.
+    - isAdmin: True si el usuario es administrador, False en caso contrario.
+
+    Retorna:
+    Response: True si las acciones son válidas, False en caso contrario.
+
+    Excepciones:
+    HTTPStatus.BAD_REQUEST: Las acciones de la regla no son válidas.
+    HTTPStatus.FORBIDDEN: Solo los administradores pueden crear reglas con acciones de tipo set.
     """
     if not isinstance(acciones, list):
         raise ValueError('Las acciones de la regla deben ser una lista de diccionarios')
@@ -77,6 +96,21 @@ def comprobar_acciones(acciones, isAdmin):
 
 @regla_blueprint.route('/getAll', methods=['GET'])
 def get_user_reglas():
+    """
+    Descripción:
+    Obtiene todas las reglas asociadas al usuario actual.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con las reglas en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron reglas para el usuario.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener las reglas debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -92,6 +126,21 @@ def get_user_reglas():
     
 @regla_blueprint.route('/getAllAlertas', methods=['GET'])
 def get_user_alertas():
+    """
+    Descripción:
+    Obtiene todas las alertas asociadas al usuario actual.
+
+    Parámetros:
+    Ninguno
+
+    Retorna:
+    Response: Respuesta HTTP con las alertas en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron alertas para el usuario.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener las alertas debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -107,6 +156,21 @@ def get_user_alertas():
     
 @regla_blueprint.route('/<int:id_regla>/dispositivos', methods=['GET'])
 def get_dispositivo_reglas(id_regla):
+    """
+    Descripción:
+    Obtiene los dispositivos asociados a una regla específica.
+
+    Parámetros:
+    - id_regla: ID de la regla para la cual se quieren obtener los dispositivos.
+
+    Retorna:
+    Response: Respuesta HTTP con los dispositivos en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontró la regla o no tiene dispositivos asociados.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener los dispositivos debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -133,6 +197,25 @@ def get_dispositivo_reglas(id_regla):
 @regla_blueprint.route('/create', methods=['POST'])
 ### Para el tema de vigilar que se cumplan las reglas y ejecutar las acciones, revisar conversación Motor de reglas MySQL ChatGPT 29/05 ###
 def create_user_regla():
+    """
+    Descripción:
+    Crea una nueva regla para el usuario actual con los criterios y acciones proporcionados.
+
+    Parámetros:
+    Ninguno directamente. Se espera un JSON en el cuerpo de la solicitud con los siguientes campos:
+    - nombre: Nombre de la regla.
+    - criterios: Lista de criterios para la regla.
+    - acciones: Lista de acciones para la regla.
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al crear la regla debido a datos incorrectos o faltantes.
+    HTTPStatus.FORBIDDEN: Solo los administradores pueden crear reglas con acciones de tipo set.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar crear la regla debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -171,6 +254,25 @@ def create_user_regla():
 @regla_blueprint.route('/create_alerta', methods=['POST'])
 ### Para el tema de vigilar que se cumplan las reglas y ejecutar las acciones, revisar conversación Motor de reglas MySQL ChatGPT 29/05 ###
 def create_user_alerta():
+    """
+    Descripción:
+    Crea una nueva alerta para el usuario actual con los criterios y acciones proporcionados.
+
+    Parámetros:
+    Ninguno directamente. Se espera un JSON en el cuerpo de la solicitud con los siguientes campos:
+    - nombre: Nombre de la alerta.
+    - criterios: Lista de criterios para la alerta.
+    - acciones: Lista de acciones para la alerta.
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al crear la alerta debido a datos incorrectos o faltantes.
+    HTTPStatus.FORBIDDEN: Solo los administradores pueden crear alertas con acciones de tipo set.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar crear la alerta debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -208,6 +310,21 @@ def create_user_alerta():
     
 @regla_blueprint.route('/delete/<int:id_regla>', methods=['DELETE']) 
 def delete_user_regla(id_regla):
+    """
+    Descripción:
+    Elimina una regla existente según el ID proporcionado.
+
+    Parámetros:
+    - id_regla: ID de la regla a eliminar.
+
+    Retorna:
+    Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontró la regla a eliminar.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al intentar eliminar la regla debido a una excepción.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)

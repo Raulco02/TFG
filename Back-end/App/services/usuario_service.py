@@ -12,7 +12,25 @@ security_codes = {}
 users_security_code = {}
 
 class usuarioService:
+    """
+    Descripción:
+    Servicio para gestionar usuarios y operaciones relacionadas en la aplicación.
+    """
     def login(correo, password): 
+        """
+        Descripción:
+        Verifica las credenciales del usuario para iniciar sesión.
+
+        Parámetros:
+        correo (str): Correo electrónico del usuario.
+        password (str): Contraseña del usuario.
+
+        Retorna:
+        dict or bool: Datos del usuario si las credenciales son correctas, False si no.
+
+        Excepciones:
+        None
+        """
         usuario_encontrado = False 
         # Crear una instancia de UsuariosDAO
         usuario_dao = UsuariosDAO()
@@ -33,6 +51,21 @@ class usuarioService:
             return usuario_encontrado
     
     def registrar(nombre, correo, password):
+        """
+        Descripción:
+        Registra un nuevo usuario en la base de datos.
+
+        Parámetros:
+        nombre (str): Nombre del nuevo usuario.
+        correo (str): Correo electrónico del nuevo usuario.
+        password (str): Contraseña del nuevo usuario.
+
+        Retorna:
+        None
+
+        Excepciones:
+        None
+        """
         # Crear una instancia de Usuario
         nuevo_usuario = Usuario(nombre, correo, password)
 
@@ -94,6 +127,19 @@ class usuarioService:
             time.sleep(60)
 
     def obtener_usuario_por_id(id):
+        """
+        Descripción:
+        Obtiene los datos de un usuario mediante su ID.
+
+        Parámetros:
+        id (int): ID del usuario.
+
+        Retorna:
+        dict or None: Datos del usuario si existe, None si no se encuentra.
+
+        Excepciones:
+        None
+        """
         usuario_dao = UsuariosDAO()
         usuario_data = usuario_dao.obtener_usuario_por_id(id)
         if(usuario_data is None):
@@ -102,16 +148,55 @@ class usuarioService:
         return usuario_json
 
     def obtener_usuario_por_nombre(nombre):
+        """
+        Descripción:
+        Obtiene los datos de un usuario mediante su nombre.
+
+        Parámetros:
+        nombre (str): Nombre del usuario.
+
+        Retorna:
+        dict or None: Datos del usuario si existe, None si no se encuentra.
+
+        Excepciones:
+        None
+        """
         usuario_dao = UsuariosDAO()
         usuario_data = usuario_dao.obtener_usuario_por_nombre(nombre)
         return usuario_data
 
     def obtener_usuario_por_correo(correo):
+        """
+        Descripción:
+        Obtiene los datos de un usuario mediante su correo electrónico.
+
+        Parámetros:
+        correo (str): Correo electrónico del usuario.
+
+        Retorna:
+        dict or None: Datos del usuario si existe, None si no se encuentra.
+
+        Excepciones:
+        None
+        """
         usuario_dao = UsuariosDAO()
         usuario_data = usuario_dao.obtener_usuario_por_correo(correo)
         return usuario_data
 
     def obtener_todos_los_usuarios():
+        """
+        Descripción:
+        Obtiene todos los usuarios registrados en la base de datos.
+
+        Parámetros:
+        None
+
+        Retorna:
+        list: Lista de diccionarios con los datos de todos los usuarios.
+
+        Excepciones:
+        None
+        """
         usuario_dao = UsuariosDAO()
         usuario_data = usuario_dao.obtener_todos_los_usuarios()
         usuarios_list = []
@@ -121,6 +206,21 @@ class usuarioService:
         return usuarios_list
 
     def crear_usuario(nombre, correo, password):
+        """
+        Descripción:
+        Crea un nuevo usuario en la base de datos.
+
+        Parámetros:
+        nombre (str): Nombre del nuevo usuario.
+        correo (str): Correo electrónico del nuevo usuario.
+        password (str): Contraseña del nuevo usuario.
+
+        Retorna:
+        None
+
+        Excepciones:
+        None
+        """
         # Crear una instancia de Usuario
         nuevo_usuario = Usuario(nombre, correo, password)
 
@@ -131,6 +231,19 @@ class usuarioService:
         usuarios_dao.crear_usuario(nuevo_usuario)
 
     def eliminar_usuario(id):
+        """
+        Descripción:
+        Elimina un usuario de la base de datos mediante su ID.
+
+        Parámetros:
+        id (int): ID del usuario a eliminar.
+
+        Retorna:
+        None
+
+        Excepciones:
+        None
+        """
         # Crear una instancia de UsuariosDAO
         usuarios_dao = UsuariosDAO()
 
@@ -138,6 +251,22 @@ class usuarioService:
         usuarios_dao.eliminar_usuario(id)
 
     def actualizar_usuario(nuevo_nombre, nuevo_correo, nueva_password, id):
+        """
+        Descripción:
+        Actualiza los datos de un usuario en la base de datos.
+
+        Parámetros:
+        nuevo_nombre (str): Nuevo nombre del usuario.
+        nuevo_correo (str): Nuevo correo electrónico del usuario.
+        nueva_password (str): Nueva contraseña del usuario.
+        id (int): ID del usuario a actualizar.
+
+        Retorna:
+        None
+
+        Excepciones:
+        None
+        """
         # Crear una instancia de Usuario con los nuevos datos
         nuevo_usuario = Usuario(nuevo_nombre, nuevo_correo, nueva_password)
 

@@ -6,7 +6,21 @@ from datetime import datetime
 from App.model.agente_mongo import Agente
 
 class mongo_dispositivoDAO:
+    """
+    Descripción:
+    Clase para gestionar operaciones CRUD relacionadas con dispositivos en la base de datos MongoDB.
+    """
     def __init__(self):
+        """
+        Descripción:
+        Inicializa la clase mongo_dispositivoDAO cargando la configuración de MongoDB desde un archivo de configuración.
+
+        Retorna:
+        None
+
+        Excepciones:
+        KeyError: Captura y maneja cualquier excepción que ocurra al intentar leer las configuraciones del archivo secrets.cfg.
+        """
         self.config = configparser.ConfigParser()
         # Configuración de MongoDB
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +47,20 @@ class mongo_dispositivoDAO:
             self.mongodb_password = None
 
     def almacenarMedicion(self, atributos, sensor):
+        """
+        Descripción:
+        Almacena una medición en la base de datos MongoDB.
+
+        Parámetros:
+        atributos (dict): Diccionario que contiene los atributos de la medición.
+        sensor (str): Identificador del sensor.
+
+        Retorna:
+        None
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar crear el agente de MongoDB o insertar un documento.
+        """
         payload = {
             "sensor": sensor,#Cuidado
             "timestamp": datetime.utcnow(),
@@ -49,6 +77,20 @@ class mongo_dispositivoDAO:
             print(f"Error al insertar en MongoDB: {ex}")
     
     def get_sensor_data(self, filtro, campos=None):
+        """
+        Descripción:
+        Obtiene datos del sensor desde la base de datos MongoDB basándose en un filtro y campos opcionales.
+
+        Parámetros:
+        filtro (dict): Diccionario que contiene los criterios de búsqueda.
+        campos (dict, opcional): Diccionario que especifica los campos a devolver.
+
+        Retorna:
+        list: Lista de documentos que coinciden con el filtro.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar crear el agente de MongoDB o buscar documentos.
+        """
         try:
             agente = Agente(self.mongodb_host, self.mongodb_port, self.mongodb_database, self.mongodb_collection, self.mongodb_user, self.mongodb_password)
         except Exception as ex:
@@ -70,6 +112,19 @@ class mongo_dispositivoDAO:
             print(f"Error al buscar en MongoDB: {ex}")
     
     def get_sensor_last_value(self, filtro):
+        """
+        Descripción:
+        Obtiene el último valor del sensor desde la base de datos MongoDB basándose en un filtro.
+
+        Parámetros:
+        filtro (dict): Diccionario que contiene los criterios de búsqueda.
+
+        Retorna:
+        dict: Documento que contiene el último valor del sensor.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar crear el agente de MongoDB o buscar un documento.
+        """
         try:
             agente = Agente(self.mongodb_host, self.mongodb_port, self.mongodb_database, self.mongodb_collection, self.mongodb_user, self.mongodb_password)
         except Exception as ex:

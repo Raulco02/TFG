@@ -3,7 +3,21 @@ import configparser
 import mysql.connector
 
 class agente_mysql:
+    """
+    Descripción:
+    Clase que gestiona operaciones básicas en una base de datos MySQL utilizando mysql.connector.
+    """
     def __init__(self):
+        """
+        Descripción:
+        Inicializa una instancia de agente_mysql y carga la configuración desde el archivo secrets.cfg.
+
+        Retorna:
+        No hay retorno explícito.
+        
+        Excepciones:
+        KeyError: Si la sección 'MYSQL' no está presente en el archivo secrets.cfg.
+        """
         self.config = configparser.ConfigParser()
         # Configuración de MongoDB
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +42,16 @@ class agente_mysql:
         self.cursor = None
 
     def connect(self):
+        """
+        Descripción:
+        Establece una conexión con la base de datos MySQL utilizando los parámetros de configuración cargados.
+
+        Retorna:
+        No hay retorno explícito.
+
+        Excepciones:
+        mysql.connector.Error: Error al conectar con la base de datos MySQL.
+        """
         try:
             self.connection = mysql.connector.connect(
                 host=self.host,
@@ -42,12 +66,32 @@ class agente_mysql:
             raise
 
     def disconnect(self):
+        """
+        Descripción:
+        Establece una conexión con la base de datos MySQL utilizando los parámetros de configuración cargados.
+
+        Retorna:
+        No hay retorno explícito.
+
+        Excepciones:
+        mysql.connector.Error: Error al conectar con la base de datos MySQL.
+        """
         if self.connection.is_connected():
             self.cursor.close()
             self.connection.close()
             print("Conexión cerrada")
 
     def start_transaction(self):
+        """
+        Descripción:
+        Inicia una nueva transacción en la conexión activa.
+
+        Retorna:
+        No hay retorno explícito.
+
+        Excepciones:
+        mysql.connector.Error: Error al iniciar la transacción.
+        """
         try:
             self.connection.start_transaction()
             print("Transacción iniciada")
@@ -56,6 +100,16 @@ class agente_mysql:
             raise
 
     def commit_transaction(self):
+        """
+        Descripción:
+        Confirma la transacción actual en la conexión activa.
+
+        Retorna:
+        No hay retorno explícito.
+
+        Excepciones:
+        mysql.connector.Error: Error al confirmar la transacción.
+        """
         try:
             self.connection.commit()
             print("Transacción confirmada")
@@ -64,6 +118,16 @@ class agente_mysql:
             raise
 
     def rollback_transaction(self):
+        """
+        Descripción:
+        Revierte la transacción actual en la conexión activa.
+
+        Retorna:
+        No hay retorno explícito.
+
+        Excepciones:
+        mysql.connector.Error: Error al revertir la transacción.
+        """
         try:
             self.connection.rollback()
             print("Transacción revertida")
@@ -72,6 +136,20 @@ class agente_mysql:
             raise
 
     def execute_query(self, query, values=None):
+        """
+        Descripción:
+        Ejecuta una consulta SQL en la base de datos utilizando los parámetros proporcionados.
+
+        Parámetros:
+        - query (str): Consulta SQL a ejecutar.
+        - values (tuple): Opcional. Valores a ser pasados a la consulta SQL.
+
+        Retorna:
+        - list or None: Lista de registros devueltos por la consulta si es una consulta SELECT, o None.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta SQL.
+        """
         try:
             print('Query en execute query:', query)
             if values:
@@ -91,6 +169,20 @@ class agente_mysql:
             raise
 
     def create_record(self, table, data):
+        """
+        Descripción:
+        Crea un nuevo registro en la tabla especificada con los datos proporcionados.
+
+        Parámetros:
+        - table (str): Nombre de la tabla donde se creará el registro.
+        - data (dict): Datos del nuevo registro, donde las claves son nombres de columnas y los valores son los datos.
+
+        Retorna:
+        - int or None: ID del último registro insertado si la operación fue exitosa, o None si falló.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta de inserción.
+        """
         placeholders = ', '.join(['%s'] * len(data))
         columns = ', '.join([f"`{column}`" for column in data.keys()])
         values = tuple(data.values())
@@ -102,6 +194,20 @@ class agente_mysql:
         return self.cursor.lastrowid
 
     def read_records(self, table, condition=None):
+        """
+        Descripción:
+        Lee registros de la tabla especificada en la base de datos según la condición proporcionada.
+
+        Parámetros:
+        - table (str): Nombre de la tabla de donde se leerán los registros.
+        - condition (str): Opcional. Condición para filtrar los registros a leer.
+
+        Retorna:
+        - list or None: Lista de registros leídos si la operación fue exitosa, o None si no se encontraron registros.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta de lectura.
+        """
         table_name = f"`{table}`"
         query = f"SELECT * FROM {table_name}"
         if condition:
@@ -110,6 +216,21 @@ class agente_mysql:
         return records
 
     def update_record(self, table, data, condition):
+        """
+        Descripción:
+        Actualiza registros en la tabla especificada con los nuevos datos proporcionados y la condición dada.
+
+        Parámetros:
+        - table (str): Nombre de la tabla donde se actualizarán los registros.
+        - data (dict): Datos actualizados, donde las claves son nombres de columnas y los valores son los nuevos datos.
+        - condition (str): Condición para filtrar los registros que se actualizarán.
+
+        Retorna:
+        - list or None: Lista de registros antes de la actualización si la operación fue exitosa y se encontraron registros, o None si no se encontraron registros para actualizar.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta de actualización.
+        """
         update_values = ', '.join([f"{key} = %s" for key in data.keys()])
         values = tuple(data.values())
         query_select = f"SELECT * FROM {table} WHERE {condition}"
@@ -123,6 +244,20 @@ class agente_mysql:
             return None
 
     def delete_record(self, table, condition):
+        """
+        Descripción:
+        Elimina registros de la tabla especificada según la condición dada.
+
+        Parámetros:
+        - table (str): Nombre de la tabla de donde se eliminarán los registros.
+        - condition (str): Condición para filtrar los registros que se eliminarán.
+
+        Retorna:
+        - bool: True si se eliminaron registros exitosamente, False si no se eliminaron registros.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta de eliminación.
+        """
         query = f"DELETE FROM {table} WHERE {condition}"
         print('Query en delete:', query)
         self.execute_query(query)
@@ -131,6 +266,20 @@ class agente_mysql:
         return rows_affected > 0
 
     def read_records_by_query(self, query, params):
+        """
+        Descripción:
+        Ejecuta una consulta SQL personalizada con parámetros.
+
+        Parámetros:
+        - query (str): Consulta SQL a ejecutar.
+        - params (tuple): Parámetros para la consulta SQL.
+
+        Retorna:
+        - list or None: Lista de registros devueltos por la consulta si la operación fue exitosa, o None si no se encontraron registros.
+
+        Excepciones:
+        mysql.connector.Error: Error al ejecutar la consulta SQL personalizada.
+        """
         try:
             self.cursor.execute(query, params)
             records = self.cursor.fetchall()

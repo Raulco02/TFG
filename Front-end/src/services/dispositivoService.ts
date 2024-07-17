@@ -15,7 +15,7 @@ class dispositivoService{
       }
 
       async getDispositivosTemperatura() {
-        const response = await fetch('http://localhost:5000/dispositivo/getAllTemperatura', {
+        const response = await fetch('http://localhost:5000/dispositivo/getAllTermostato', {
         method: 'GET',
         credentials: 'include',
         headers: {

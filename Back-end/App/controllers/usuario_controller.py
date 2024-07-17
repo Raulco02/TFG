@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con los usuarios. 
+# Proporciona rutas para obtener, crear, editar y eliminar usuarios.
+
 import hashlib
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
@@ -14,7 +18,22 @@ sessionsUsuarios = {} #Ver si esto es útil
 
 @usuario_blueprint.route('/login', methods=['PUT']) #HACER UN LOGOUT TAMBIÉN
 def login():
-# Obtener los nuevos datos del usuario del cuerpo de la solicitud
+    """
+    Descripción:
+    Inicia sesión de un usuario utilizando correo y contraseña.
+
+    Parámetros:
+    JSON en el cuerpo de la solicitud con 'correo' y 'password'.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el inicio de sesión es exitoso.
+    Códigos HTTP: OK (200), NOT_FOUND (404), BAD_REQUEST (400), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.NOT_FOUND: Usuario no encontrado.
+    HTTPStatus.BAD_REQUEST: Faltan datos del usuario.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         correo = request.json.get('correo')
         password = request.json.get('password')
@@ -49,6 +68,22 @@ def login():
 
 @usuario_blueprint.route('/codigo', methods=['PUT']) 
 def verificar_codigo():
+    """
+    Descripción:
+    Verifica un código de seguridad para el usuario que ha iniciado sesión.
+
+    Parámetros:
+    JSON en el cuerpo de la solicitud con 'codigo'.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el código es correcto.
+    Códigos HTTP: OK (200), UNAUTHORIZED (401), BAD_REQUEST (400), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: Código de seguridad incorrecto o expirado.
+    HTTPStatus.BAD_REQUEST: Faltan datos del usuario.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         codigo = request.json.get('codigo')
         usuario = session.get('usuario_id')
@@ -66,6 +101,19 @@ def verificar_codigo():
 
 @usuario_blueprint.route('/perfil', methods=['GET'])
 def obtener_perfil():
+    """
+    Descripción:
+    Obtiene la información del perfil del usuario que ha iniciado sesión.
+
+    Retorna:
+    Respuesta: Información del perfil del usuario si la sesión es válida.
+    Códigos HTTP: OK (200), UNAUTHORIZED (401), NOT_FOUND (404), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: Usuario no encontrado.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         # session = request.environ.get('beaker.session')
         registrado = session.get("register")
@@ -95,6 +143,19 @@ def obtener_perfil():
 
 @usuario_blueprint.route('/datos', methods=['GET']) #PARA OBTENER DATOS USUARIO+DASHBOARDS+SECCIONES(¿GUARDAR ESTO LUEGO EN NAVEGADOR?)
 def obtener_datos_usuario(): #Poner returns en el if
+    """
+    Descripción:
+    Obtiene los datos del usuario junto con sus dashboards y secciones asociadas.
+
+    Retorna:
+    Respuesta: Información del usuario y sus dashboards completos si la sesión es válida.
+    Códigos HTTP: OK (200), UNAUTHORIZED (401), NOT_FOUND (404), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron dashboards o secciones.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -133,6 +194,18 @@ def obtener_datos_usuario(): #Poner returns en el if
 
 @usuario_blueprint.route('/registrar', methods=['POST'])
 def registrar():
+    """
+    Descripción:
+    Registra un nuevo usuario con los datos proporcionados en el cuerpo de la solicitud.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el usuario se registra correctamente.
+    Códigos HTTP: OK (200), BAD_REQUEST (400), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.BAD_REQUEST: Error al obtener datos del usuario.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         info = request.get_json()
         try:
@@ -174,6 +247,17 @@ def registrar():
 # Ruta para logout
 @usuario_blueprint.route('/logout', methods=['POST'])
 def logout():
+    """
+    Descripción:
+    Cierra la sesión del usuario que ha iniciado sesión actualmente.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el cierre de sesión es exitoso.
+    Códigos HTTP: OK (200), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         # Eliminar el usuario_id de la sesión
         session.pop('usuario_id', None)
@@ -219,6 +303,19 @@ def logout():
     
 @usuario_blueprint.route('/getAll', methods=['GET'])
 def get_usuarios():
+    """
+    Descripción:
+    Obtiene todos los usuarios registrados en el sistema.
+
+    Retorna:
+    Respuesta: Lista de usuarios registrados.
+    Códigos HTTP: OK (200), UNAUTHORIZED (401), NOT_FOUND (404), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron usuarios.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -256,6 +353,21 @@ def get_usuarios():
 
 @usuario_blueprint.route('/crear_usuario', methods=['POST'])
 def crear_usuario():
+    """
+    Descripción:
+    Crea un nuevo usuario con los datos proporcionados en el cuerpo de la solicitud.
+
+    Parámetros:
+    JSON en el cuerpo de la solicitud con 'nombre', 'correo' y 'password' del usuario.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el usuario se crea correctamente.
+    Códigos HTTP: CREATED (201), BAD_REQUEST (400), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.BAD_REQUEST: Error al obtener datos del usuario o datos faltantes.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     # Obtener los datos del usuario del cuerpo de la solicitud
     nombre = request.json.get('nombre')
     correo = request.json.get('correo')
@@ -276,6 +388,23 @@ def crear_usuario():
 
 @usuario_blueprint.route('/edit', methods=['PUT'])
 def edit_usuario(): #NO ME ACTUALIZA EL CORREO
+    """
+    Descripción:
+    Edita los datos de un usuario existente con los datos proporcionados en el cuerpo de la solicitud.
+
+    Parámetros:
+    JSON en el cuerpo de la solicitud con 'id' (ID del usuario a editar), 'nuevo_nombre', 'nuevo_correo' y 'nueva_password'.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el usuario se actualiza correctamente.
+    Códigos HTTP: OK (200), BAD_REQUEST (400), UNAUTHORIZED (401), NOT_FOUND (404), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error al obtener datos del usuario o datos faltantes.
+    HTTPStatus.NOT_FOUND: Usuario no encontrado.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     try:
         registrado = session.get("register")
         if session is None or not registrado:
@@ -313,6 +442,22 @@ def edit_usuario(): #NO ME ACTUALIZA EL CORREO
     
 @usuario_blueprint.route('/delete/<string:id>', methods=['DELETE'])
 def eliminar_usuario(id):
+    """
+    Descripción:
+    Elimina un usuario existente con el ID proporcionado.
+
+    Parámetros:
+    ID (cadena) en la URL para identificar el usuario a eliminar.
+
+    Retorna:
+    Respuesta: Mensaje de éxito si el usuario se elimina correctamente.
+    Códigos HTTP: OK (200), UNAUTHORIZED (401), NOT_FOUND (404), INTERNAL_SERVER_ERROR (500).
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: Usuario no encontrado.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno del servidor.
+    """
     # Verificar si el usuario existe
     try:
         registrado = session.get("register")

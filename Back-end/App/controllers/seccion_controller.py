@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con las secciones. 
+# Proporciona rutas para obtener, crear, editar y eliminar secciones.
+
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
 from App.exceptions.wrongLayout import wrongLayoutException
@@ -8,6 +12,21 @@ seccion_blueprint = Blueprint('seccion', __name__)
 
 @seccion_blueprint.route('/<string:id_dashboard>', methods=['GET']) #Igual debería añadir comprobación de usuario en todos los métodos
 def get_seccions(id_dashboard):
+    """
+    Descripción:
+    Obtiene las secciones de un dashboard específico si el usuario tiene sesión válida.
+
+    Parámetros:
+    id_dashboard (str): ID del dashboard del cual obtener las secciones.
+
+    Retorna:
+    Response: JSON con las secciones del dashboard y código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.NOT_FOUND: No se encontraron secciones en el dashboard.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al obtener las secciones.
+    """
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -23,6 +42,21 @@ def get_seccions(id_dashboard):
     
 @seccion_blueprint.route('/get/<string:id_seccion>', methods=['GET']) 
 def get_seccion(id_seccion):
+    """
+    Descripción:
+    Obtiene los detalles de una sección específica si el usuario tiene permisos para acceder a ella.
+
+    Parámetros:
+    id_seccion (str): ID de la sección que se desea obtener.
+
+    Retorna:
+    Response: JSON con la información de la sección y código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene permisos para acceder a esta sección.
+    HTTPStatus.NOT_FOUND: No se encontró la sección especificada.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al obtener la sección.
+    """
     try:
         registrado = session.get("register")
         if session is None or not registrado:
@@ -39,6 +73,25 @@ def get_seccion(id_seccion):
 
 @seccion_blueprint.route('/create', methods=['POST'])   
 def create_seccion():
+    """
+    Descripción:
+    Crea una nueva sección en un dashboard específico si el usuario tiene permisos para ello.
+
+    Parámetros:
+    dashboard_id (str): ID del dashboard donde se creará la sección.
+    nombre (str): Nombre de la nueva sección.
+    icono (str): Ícono de la nueva sección.
+    layout (str): Layout de la nueva sección.
+
+    Retorna:
+    Response: JSON con mensaje de éxito y código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error en el layout proporcionado o falta de datos requeridos.
+    HTTPStatus.FORBIDDEN: No se pueden crear más de 10 secciones en un dashboard.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al crear la sección.
+    """
     try:
         id_dashboard = request.json.get("dashboard_id")
         nombre = request.json.get("nombre")
@@ -68,6 +121,25 @@ def create_seccion():
         
 @seccion_blueprint.route('/edit', methods=['PUT'])   
 def edit_seccion():
+    """
+    Descripción:
+    Edita una sección existente si el usuario tiene permisos sobre el dashboard al cual pertenece.
+
+    Parámetros:
+    id (str): ID de la sección que se desea editar.
+    dashboard_id (str): ID del nuevo dashboard al que se asociará la sección (opcional).
+    nombre (str): Nuevo nombre de la sección (opcional).
+    icono (str): Nuevo ícono de la sección (opcional).
+    layout (str): Nuevo layout de la sección (opcional).
+
+    Retorna:
+    Response: JSON con mensaje de éxito y código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: Error en el layout proporcionado o falta de datos requeridos.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al editar la sección.
+    """
     try:
         id = request.json.get("id")
         #id_dashboard_antiguo = request.json.get("dashboard_id") HAY QUE AÑADIR EL DASHBOARD_ID ANTIGUO PARA PODER CAMBIARLO DE DASHBOARD
@@ -100,6 +172,21 @@ def edit_seccion():
 
 @seccion_blueprint.route('/num_filas_up', methods=['PUT'])  
 def subir_numero_filas():
+    """
+    Descripción:
+    Incrementa el número de filas de una sección si el usuario tiene permisos sobre el dashboard al cual pertenece la sección.
+
+    Parámetros:
+    id (str): ID de la sección a la cual se le incrementará el número de filas.
+
+    Retorna:
+    Response: JSON con mensaje de éxito y código de estado HTTP.
+
+    Excepciones:
+    HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    HTTPStatus.BAD_REQUEST: No se especificó un ID de sección válido.
+    HTTPStatus.INTERNAL_SERVER_ERROR: Error interno al subir el número de filas de la sección.
+    """
     try:
         id = request.json.get("id")
         if not id:

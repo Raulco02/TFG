@@ -6,7 +6,24 @@ from App.model.tarjeta import Tarjeta
 from App.helpers.tarjetas import tarjetasHelper
 
 class seccionService:
+    """
+    Descripción:
+    Servicio para gestionar secciones y tarjetas asociadas a los dashboards en la aplicación.
+    """
     def obtener_secciones(id_dashboard):
+        """
+        Descripción:
+        Obtiene todas las secciones asociadas a un dashboard específico desde la base de datos.
+
+        Parámetros:
+        id_dashboard (int): ID del dashboard para el cual se obtienen las secciones.
+
+        Retorna:
+        list: Lista de secciones asociadas al dashboard.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.obtener_secciones(id_dashboard)
         print("seccion DATA:", seccion_data)
@@ -19,6 +36,19 @@ class seccionService:
         return seccions
     
     def obtener_seccion(id_seccion):
+        """
+        Descripción:
+        Obtiene una sección específica junto con las tarjetas asociadas desde la base de datos.
+
+        Parámetros:
+        id_seccion (int): ID de la sección que se desea obtener.
+
+        Retorna:
+        dict: Información de la sección incluyendo sus tarjetas asociadas.
+
+        Excepciones:
+        None
+        """
         tarjeta_dao = tarjetaDAO()
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.obtener_seccion(id_seccion)
@@ -35,11 +65,38 @@ class seccionService:
         return seccions
     
     def comprobar_seccion(id_seccion, id_usuario):
+        """
+        Descripción:
+        Verifica si una sección específica pertenece a un usuario.
+
+        Parámetros:
+        id_seccion (int): ID de la sección que se desea verificar.
+        id_usuario (int): ID del usuario propietario de la sección.
+
+        Retorna:
+        bool: True si la sección pertenece al usuario, False en caso contrario.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         existe = seccion_dao.comprobar_seccion(id_seccion, id_usuario)
         return existe
     
     def obtener_secciones_usuario(dashboards):
+        """
+        Descripción:
+        Obtiene todas las secciones de múltiples dashboards junto con sus tarjetas asociadas.
+
+        Parámetros:
+        dashboards (list): Lista de dashboards de los cuales se obtendrán las secciones.
+
+        Retorna:
+        list: Lista de dashboards con sus respectivas secciones y tarjetas.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         tarjeta_dao = tarjetaDAO()
         print('DASHBOARDS:', dashboards)
@@ -61,6 +118,19 @@ class seccionService:
         return dashboards
     
     def obtener_secciones_dashboard(id_dashboard):
+        """
+        Descripción:
+        Obtiene todas las secciones asociadas a un dashboard específico desde la base de datos.
+
+        Parámetros:
+        id_dashboard (int): ID del dashboard para el cual se obtienen las secciones.
+
+        Retorna:
+        list: Lista de secciones asociadas al dashboard.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.obtener_secciones(id_dashboard)
         secciones=[]
@@ -108,6 +178,22 @@ class seccionService:
     #     return tarjetas_lista
     
     def crear_seccion_por_dashboard_id(nombre, icono, layout, dashboard_id):
+        """
+        Descripción:
+        Crea una nueva sección asociada a un dashboard específico en la base de datos.
+
+        Parámetros:
+        nombre (str): Nombre de la nueva sección.
+        icono (str): Icono de la nueva sección.
+        layout (str): Layout de la nueva sección.
+        dashboard_id (int): ID del dashboard al cual se asociará la nueva sección.
+
+        Retorna:
+        dict: Información de la sección creada.
+
+        Excepciones:
+        None
+        """
         print('ID DASHBOARD en DAO:', dashboard_id)
         seccion_dao = seccionDAO()
         seccion = Seccion(nombre, icono, layout)
@@ -115,11 +201,41 @@ class seccionService:
         return seccion_data
     
     def editar_seccion(id, nombre, icono, layout, dashboard_id):
+        """
+        Descripción:
+        Edita una sección existente en la base de datos.
+
+        Parámetros:
+        id (int): ID de la sección que se desea editar.
+        nombre (str): Nuevo nombre de la sección.
+        icono (str): Nuevo icono de la sección.
+        layout (str): Nuevo layout de la sección.
+        dashboard_id (int): ID del dashboard al cual pertenece la sección.
+
+        Retorna:
+        dict: Información de la sección editada.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.editar_seccion(id, nombre, icono, layout, dashboard_id)
         return seccion_data
     
     def obtener_dashboard_por_seccion(id_seccion):
+        """
+        Descripción:
+        Obtiene el dashboard al cual pertenece una sección específica.
+
+        Parámetros:
+        id_seccion (int): ID de la sección de la cual se desea obtener el dashboard.
+
+        Retorna:
+        dict: Información del dashboard al cual pertenece la sección.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.obtener_dashboard_por_seccion(id_seccion)
         print("DASHBOARD DATA:", seccion_data)
@@ -127,6 +243,19 @@ class seccionService:
         return dash
     
     def subir_numero_filas(id_seccion):
+        """
+        Descripción:
+        Aumenta el número de filas de una sección en la base de datos.
+
+        Parámetros:
+        id_seccion (int): ID de la sección a la cual se desea aumentar el número de filas.
+
+        Retorna:
+        bool: True si se aumentó el número de filas exitosamente.
+
+        Excepciones:
+        None
+        """
         seccion_dao = seccionDAO()
         seccion_data = seccion_dao.subir_numero_filas(id_seccion)
         return seccion_data

@@ -46,6 +46,7 @@ const Formulario = ({onClose, submit, icono = null, nombre = null, popover = tru
                   label="Icono"
                   fullWidth
                   error={!!errors.icono}
+                  style={{ color: theme.palette.text.primary }}
                   helperText={errors.icono && errors.icono.message}
                 >
                   {iconOptions.map((option) => (

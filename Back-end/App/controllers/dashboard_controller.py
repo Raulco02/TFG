@@ -1,3 +1,7 @@
+# Descripción:
+# Blueprint que maneja las rutas relacionadas con los dashboards de usuario en la aplicación. 
+# Proporciona rutas para obtener, crear, editar y eliminar dashboards.
+
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request, session
 from App.services.dashboard_service import dashboardService
@@ -7,6 +11,20 @@ dashboard_blueprint = Blueprint('dashboard', __name__)
 
 @dashboard_blueprint.route('/', methods=['GET'])
 def get_user_dashboards():
+    # Descripción:
+    # Obtiene todos los dashboards del usuario actualmente en sesión.
+
+    # Parámetros:
+
+    # Ninguno
+    # Retorna:
+
+    # Response: Respuesta HTTP con los dashboards del usuario en formato JSON y un código de estado HTTP.
+    # Excepciones:
+
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.NOT_FOUND: No se encontraron dashboards para el usuario.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener el dashboard debido a una excepción.
     try:
         registrado = session.get("register")
         print('Registrado', registrado)
@@ -22,6 +40,19 @@ def get_user_dashboards():
     
 @dashboard_blueprint.route('/get/<int:id>', methods=['GET'])
 def get_user_dashboard(id):
+    # Descripción:
+    # Obtiene un dashboard específico del usuario basado en el ID proporcionado.
+
+    # Parámetros:
+    # id (int): ID del dashboard a obtener.
+
+    # Retorna:
+    # Response: Respuesta HTTP con el dashboard del usuario en formato JSON y un código de estado HTTP.
+    
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.NOT_FOUND: No se encontraron dashboards para el usuario.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al obtener el dashboard debido a una excepción.
     try:
         registrado = session.get("register")
         if session is None or not registrado:
@@ -36,6 +67,20 @@ def get_user_dashboard(id):
 
 @dashboard_blueprint.route('/create', methods=['POST'])   
 def create_user_dashboard():
+    # Descripción:
+    # Crea un nuevo dashboard para el usuario actualmente en sesión.
+
+    # Parámetros:
+    # Ninguno
+
+    # Retorna:
+    # Response: Respuesta HTTP con un mensaje de éxito y los datos del dashboard creado en formato JSON, y un código de estado HTTP.
+    
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.FORBIDDEN: No se pueden crear más de 5 dashboards.
+    # HTTPStatus.BAD_REQUEST: No se especificó un nombre para el dashboard.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al crear el dashboard debido a una excepción.
     try:
         nombre = request.json.get("nombre")
         icono = request.json.get("icono")
@@ -57,6 +102,20 @@ def create_user_dashboard():
     
 @dashboard_blueprint.route('/edit', methods=['PUT'])   
 def edit_user_dashboard():
+    # Descripción:
+    # Edita un dashboard existente del usuario actualmente en sesión.
+
+    # Parámetros:
+    # Ninguno
+    
+    # Retorna:
+    # Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.NOT_FOUND: El usuario no es dueño de este dashboard.
+    # HTTPStatus.BAD_REQUEST: No se especificó un nombre para el dashboard.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al editar el dashboard debido a una excepción.
     try:
         id = request.json.get("id")
         nombre = request.json.get("nombre")
@@ -83,6 +142,19 @@ def edit_user_dashboard():
     
 @dashboard_blueprint.route('/delete/<int:id>', methods=['DELETE'])
 def delete_user_dashboard(id):
+    # Descripción:
+    # Elimina un dashboard específico del usuario basado en el ID proporcionado.
+
+    # Parámetros:
+    # id (int): ID del dashboard a eliminar.
+
+    # Retorna:
+    # Response: Respuesta HTTP con un mensaje de éxito en formato JSON y un código de estado HTTP.
+
+    # Excepciones:
+    # HTTPStatus.UNAUTHORIZED: El usuario no tiene sesión o no está registrado.
+    # HTTPStatus.NOT_FOUND: El usuario no es dueño de este dashboard.
+    # HTTPStatus.INTERNAL_SERVER_ERROR: Error al eliminar el dashboard debido a una excepción.
     try:
         registrado = session.get("register")
         if session is None or not registrado: #Quiza esto sería forbidden

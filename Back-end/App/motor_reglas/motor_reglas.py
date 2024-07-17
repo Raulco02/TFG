@@ -9,7 +9,14 @@ from App.motor_reglas.rules_list import RulesList
 from App.motor_reglas.rules_eval import RulesEval
 
 class MotorReglas(threading.Thread):
+    """
+    Descripción:
+    Clase que representa el motor de ejecución de reglas. Gestiona la evaluación y ejecución de reglas y alertas basadas en eventos.
+    """
     def __init__(self):
+        """
+        Inicializa el MotorReglas con configuraciones predeterminadas.
+        """
         super().__init__()
         self.daemon = True
         self.running = True

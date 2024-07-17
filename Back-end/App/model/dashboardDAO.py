@@ -1,10 +1,33 @@
 from App.model.agente_mysql import agente_mysql
 
 class DashboardDAO:
+    """
+    Descripción:
+    Clase que gestiona las operaciones de acceso a datos (DAO) relacionadas con los dashboards
+    y su interacción con la base de datos MySQL.
+    """
     def __init__(self):
+        """
+        Descripción:
+        Inicializa una instancia de `DashboardDAO`, creando una conexión con la base de datos MySQL
+        utilizando el objeto `agente_mysql` definido en el módulo `App.model`.
+
+        Retorna:
+        None
+        """
         self.agent = agente_mysql()
 
     def conectar(self):
+        """
+        Descripción:
+        Establece una conexión activa con la base de datos MySQL utilizando el método `connect()` del agente MySQL.
+
+        Retorna:
+        None
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar conectar con la base de datos.
+        """
         try:
             self.agent.connect()
         except Exception as ex:
@@ -12,6 +35,16 @@ class DashboardDAO:
             raise
 
     def desconectar(self):
+        """
+        Descripción:
+        Cierra la conexión activa con la base de datos MySQL utilizando el método `disconnect()` del agente MySQL.
+
+        Retorna:
+        None
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra al intentar desconectar de la base de datos.
+        """
         try:
             print('Desconectando', self.agent.connection.is_connected())
             self.agent.disconnect()
@@ -21,6 +54,20 @@ class DashboardDAO:
             raise
 
     def obtener_dashboard_por_id_usuario(self, id):
+        """
+        Descripción:
+        Obtiene los dashboards asociados a un usuario específico mediante su ID consultando la base de datos.
+
+        Parámetros:
+        - id (str): ID del usuario para el cual se obtendrán los dashboards.
+
+        Retorna:
+        - list: Lista de dashboards asociados al usuario.
+        - None: Si no se encontraron dashboards para el usuario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la consulta a la base de datos.
+        """
         try:
             self.conectar()
             condition = f"`id-usuario` = '{id}'"
@@ -47,6 +94,21 @@ class DashboardDAO:
             raise
 
     def obtener_dashboard_por_id(self, id, usuario_id):
+        """
+        Descripción:
+        Obtiene un dashboard específico por su ID y verifica si el usuario tiene acceso a dicho dashboard.
+
+        Parámetros:
+        - id (str): ID del dashboard que se desea obtener.
+        - usuario_id (str): ID del usuario que desea acceder al dashboard.
+
+        Retorna:
+        - dict: Información del dashboard si el usuario tiene acceso.
+        - None: Si el dashboard no existe o el usuario no tiene acceso.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la consulta a la base de datos.
+        """
         try:
             self.conectar()
             condition = f"id = '{id}'"
@@ -67,6 +129,21 @@ class DashboardDAO:
             raise
         
     def crear_dashboard_por_usuario_id(self, dashboard, id_usuario):
+        """
+        Descripción:
+        Crea un nuevo dashboard y lo asocia al usuario especificado por su ID en la base de datos.
+
+        Parámetros:
+        - dashboard (objeto): Objeto que contiene los datos del nuevo dashboard.
+        - id_usuario (str): ID del usuario al cual se asociará el nuevo dashboard.
+
+        Retorna:
+        - dict: Objeto que contiene los IDs del dashboard creado y su sección asociada.
+        - None: Si ocurre un error durante la creación del dashboard.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la creación del dashboard.
+        """
         try:
             print('ID USUARIO en DAO:', id_usuario)
             self.conectar()
@@ -103,6 +180,20 @@ class DashboardDAO:
             raise
         
     def comprobar_dashboard(self, id_dashboard, id_usuario):
+        """
+        Descripción:
+        Verifica si el usuario tiene acceso a un dashboard específico.
+
+        Parámetros:
+        - id_dashboard (str): ID del dashboard que se desea verificar.
+        - id_usuario (str): ID del usuario que se desea verificar.
+
+        Retorna:
+        - bool: True si el usuario tiene acceso al dashboard, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la consulta a la base de datos.
+        """
         try:
             self.conectar()
             condition = f"`id-usuario` = '{id_usuario}' AND `id-dashboard` = '{id_dashboard}'"
@@ -117,6 +208,19 @@ class DashboardDAO:
             raise
     
     def editar_dashboard(self, dashboard):
+        """
+        Descripción:
+        Actualiza los datos de un dashboard existente en la base de datos.
+
+        Parámetros:
+        - dashboard (dict): Diccionario que contiene los nuevos datos del dashboard a actualizar.
+
+        Retorna:
+        - bool: True si la operación de actualización fue exitosa, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la actualización del dashboard.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()
@@ -130,6 +234,19 @@ class DashboardDAO:
             raise
         
     def eliminar_dashboard(self, id_dashboard):
+        """
+        Descripción:
+        Elimina un dashboard específico de la base de datos.
+
+        Parámetros:
+        - id_dashboard (str): ID del dashboard que se desea eliminar.
+
+        Retorna:
+        - bool: True si la operación de eliminación fue exitosa, False en caso contrario.
+
+        Excepciones:
+        Exception: Captura y maneja cualquier excepción que ocurra durante la eliminación del dashboard.
+        """
         try:
             self.conectar()
             self.agent.start_transaction()

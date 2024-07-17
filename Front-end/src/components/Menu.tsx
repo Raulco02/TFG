@@ -203,6 +203,12 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
               color: '#fffff', // Color del placeholder dentro del TextField
             },
           },
+          focused: {
+            border: '1px solid white',
+            label: {
+              color: 'white',
+            },
+          },
           // focused: {
           //   borderColor: '#f50057 !important', // Color del borde cuando el TextField está enfocado
           // },
@@ -213,6 +219,9 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
           root: {
             color: '#DDDDDD', // Cambiar color de la etiqueta
           },
+          focused: {
+            color: 'white', // Cambiar color de la etiqueta cuando el input está enfocado
+          },
         },
       },
       MuiInputBase: {
@@ -220,13 +229,24 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
           root: {
             backgroundColor: '#242424', // Cambiar color de fondo del input
             borderColor: '#ffffff', // Cambiar color del borde del input
-            color: '#ffffff'
+            color: '#ffffff',
           },
         },
       },
       MuiSelect: {
         styleOverrides: {
           root: {
+            color: 'white',
+          },
+          icon: {
+            color: 'white',
+          },
+        },
+      },
+      MuiMenu:{
+        styleOverrides: {
+          paper: {
+            backgroundColor: '#333',
             color: 'white',
           },
         },
@@ -317,7 +337,7 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
           </IconButton>
           )}
         </div>
-        {creandoDashboard && <Formulario onClose={handleCloseForm} submit={onSubmitFormDashboard} />}
+        {creandoDashboard && <Formulario onClose={handleCloseForm} submit={onSubmitFormDashboard} theme={temaActual}/>}
         {creandoSeccion && <FormularioSeccion onClose={handleCloseForm} submit={onSubmitFormSeccion} />}
         <Popover
       open={popoverOpen}
@@ -332,7 +352,7 @@ const Menu: React.FC<MenuProps> = ({ children, setSelectedSeccion, selectedSecci
       }}
     >
       <div style={{ width: '300px', height: '150px', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'  }}>
-        <Typography>{popoverMessage}</Typography>
+        <Typography style={{color: temaActual.palette.primary.contrastText}}>{popoverMessage}</Typography>
         <Button onClick={handleAceptarClick} variant="contained" color="primary" style={{ marginTop: '10px' }}>
           Aceptar
         </Button>

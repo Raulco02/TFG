@@ -274,7 +274,7 @@ const FormularioDispositivo = ({ dispositivo=null, onClose, theme }) => {
                     render={({ field }) => (
                       <TextField
                         {...field}
-                        label={`Topic de actuación ${atributo.nombre}`}
+                        label={`Topic de actuación ${atributo.nombre_atributo}`}
                         fullWidth
                         error={!!errors[`topic_${atributo.nombre}`]}
                         helperText={
@@ -293,7 +293,7 @@ const FormularioDispositivo = ({ dispositivo=null, onClose, theme }) => {
                     render={({ field }) => (
                       <TextField
                         {...field}
-                        label={`Plantilla Jinja2 del mensaje ${atributo.nombre}`}
+                        label={`Plantilla Jinja2 del mensaje ${atributo.nombre_atributo}`}
                         fullWidth
                         error={!!errors[`plantilla_${atributo.nombre}`]}
                         helperText={
